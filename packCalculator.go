@@ -1,5 +1,9 @@
 package main
 
+import (
+	"golang.org/x/exp/slices"
+)
+
 func calculatePacks(items int, packSizes []int) map[int]int {
 	packCount := make(map[int]int)
 
@@ -12,6 +16,8 @@ func calculatePacks(items int, packSizes []int) map[int]int {
 	if len(packSizes) == 0 {
 		return packCount
 	}
+
+	slices.Sort(packSizes)
 
 	for i := len(packSizes) - 1; i > 0; i-- { // Changed the loop condition
 		switch {
