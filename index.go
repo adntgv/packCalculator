@@ -1,4 +1,13 @@
-<!DOCTYPE html>
+package main
+
+import (
+	"fmt"
+	"net/http"
+)
+
+func indexHandler(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprintf(w, `
+	<!DOCTYPE html>
 <html>
 <head>
     <title>Pack Sizes Calculator</title>
@@ -16,8 +25,8 @@
         function setPackSizes() {
             const input = document.getElementById("newPackSizes").value;
             const packSizes = input;
-
-            fetch(`/sizes/set?sizes=${packSizes}`, { method: "POST" })
+			const packSizesStr = packSizes.join(",");
+            fetch("/sizes/set?sizes="+packSizesStr, { method: "POST" })
                 .then(response => response.json())
                 .then(data => {
                     const packSizesDiv = document.getElementById("packSizes");
@@ -27,9 +36,8 @@
         }
 
         function calculatePacks() {
-            const items = parseInt(document.getElementById("items").value);
-
-            fetch(`/calculate?items=${items}`)
+            const items = parseInt(document.getElementById("items").value); 
+            fetch("/calculate?items="+items)
                 .then(response => response.json())
                 .then(data => {
                     const resultDiv = document.getElementById("result");
@@ -60,3 +68,5 @@
     </script>
 </body>
 </html>
+`)
+}

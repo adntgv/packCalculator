@@ -24,7 +24,7 @@ func main() {
 		packSizes = append(packSizes, packSize)
 	}
 
-	http.Handle("/", http.FileServer(http.Dir("static")))
+	http.HandleFunc("/", indexHandler)
 	http.HandleFunc("/calculate", calculateHandler)
 	http.HandleFunc("/sizes", getPackSizesHandler)
 	http.HandleFunc("/sizes/set", setPackSizesHandler)
