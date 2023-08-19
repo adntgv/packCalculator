@@ -28,7 +28,7 @@ func main() {
 	http.HandleFunc("/calculate", calculateHandler)
 	http.HandleFunc("/sizes", getPackSizesHandler)
 	http.HandleFunc("/sizes/set", setPackSizesHandler)
-	if err := http.ListenAndServe(":8888", nil); err != nil {
+	if err := http.ListenAndServe(":80", nil); err != nil {
 		panic(err)
 	}
 }
