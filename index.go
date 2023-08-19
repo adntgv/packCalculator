@@ -25,7 +25,7 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
         function setPackSizes() {
             const input = document.getElementById("newPackSizes").value;
             const packSizes = input;
-			const packSizesStr = packSizes.join(",");
+			const packSizesStr = packSizes;
             fetch("/sizes/set?sizes="+packSizesStr, { method: "POST" })
                 .then(response => response.json())
                 .then(data => {
