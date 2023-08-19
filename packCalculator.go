@@ -19,48 +19,7 @@ func calculatePacks(items int, packSizes []int) map[int]int {
 
 	slices.Sort(packSizes)
 
-	for i := len(packSizes) - 1; i > 0; i-- { // Changed the loop condition
-		switch {
-		case items > packSizes[i]:
-			packCount[packSizes[i]] = items / packSizes[i]
-			items = items % packSizes[i]
-		case items == packSizes[i]:
-			packCount[packSizes[i]] = 1
-			items = 0
-			return packCount
-		case items < packSizes[i]:
-			res := calculatePacks(items, packSizes[:i])
-			oversell := packSizes[i] - items
-			resSell := 0
-
-			for k, v := range res {
-				resSell += k * v
-			}
-
-			resOversell := resSell - items
-
-			if resOversell >= oversell {
-				packCount[packSizes[i]] = 1
-				items = 0
-				return packCount
-			} else {
-				continue
-			}
-		}
-	}
-
-	if items > 0 {
-		count := items / packSizes[0]
-		mod := items % packSizes[0]
-
-		if mod > 0 {
-			count++
-		}
-
-		packCount[packSizes[0]] = count
-	}
-
-	return packCount
+	return calculatePacksRecursive(items, packSizes, packCount)
 }
 
 func cleanPackSizes(packSizes []int) []int {
@@ -73,4 +32,48 @@ func cleanPackSizes(packSizes []int) []int {
 	}
 
 	return cleanedPackSizes
+}
+
+func calculatePacksRecursive(items int, packSizes []int, packCount map[int]int) map[int]int {
+	for i := len(packSizes) - 1; i > 0; i-- { // Changed the loop condition
+		packSize := packSizes[i]
+		if items >= packSize {
+			packCount[packSize] = items / packSize
+			items %= packSize
+		} else {
+			res := calculatePacks(items, packSizes[:i])
+			oversell := packSize - items
+			resSell := 0
+
+			for k, v := range res {
+				resSell += k * v
+			}
+
+			resOversell := resSell - items
+
+			if resOversell >= oversell {
+				packCount[packSize] = 1
+				items = 0
+				return packCount
+			}
+		}
+	}
+
+	if items > 0 {
+		packSize := packSizes[0]
+		count := items / packSize
+		mod := items % packSize
+
+		if mod > 0 {
+			count++
+		}
+
+		if _, ok := packCount[packSize]; !ok {
+			packCount[packSize] = count
+		} else {
+			packCount[packSize] += count
+		}
+	}
+
+	return packCount
 }
