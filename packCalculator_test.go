@@ -217,6 +217,16 @@ func Test_calculatePacks(t *testing.T) {
 				packSizes: []int{1, 5},
 			},
 			want: map[int]int{
+				1: 2,
+			},
+		},
+		{
+			name: "Test 23 - Very large pack size",
+			args: args{
+				items:     2,
+				packSizes: []int{1, 2},
+			},
+			want: map[int]int{
 				2: 1,
 			},
 		},

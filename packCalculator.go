@@ -15,25 +15,43 @@ func calculatePacks(items int, packSizes []int) map[int]int {
 
 	for i := len(packSizes) - 1; i > 0; i-- { // Changed the loop condition
 		switch {
-		case packSizes[i] <= 0:
-			continue
 		case items > packSizes[i]:
 			packCount[packSizes[i]] = items / packSizes[i]
 			items = items % packSizes[i]
 		case items == packSizes[i]:
 			packCount[packSizes[i]] = 1
 			items = 0
+			return packCount
+		case items < packSizes[i]:
+			res := calculatePacks(items, packSizes[:i])
+			oversell := packSizes[i] - items
+			resSell := 0
+
+			for k, v := range res {
+				resSell += k * v
+			}
+
+			resOversell := resSell - items
+
+			if resOversell >= oversell {
+				packCount[packSizes[i]] = 1
+				items = 0
+				return packCount
+			} else {
+				continue
+			}
 		}
 	}
 
-	if items > packSizes[0] {
-		if len(packSizes) > 1 {
-			packCount[packSizes[1]] += 1
-		} else {
-			packCount[packSizes[0]] = items / packSizes[0]
+	if items > 0 {
+		count := items / packSizes[0]
+		mod := items % packSizes[0]
+
+		if mod > 0 {
+			count++
 		}
-	} else if items > 0 {
-		packCount[packSizes[0]] = 1
+
+		packCount[packSizes[0]] = count
 	}
 
 	return packCount
